@@ -307,38 +307,41 @@ def analysis_page(model=None):
         else:
             st.markdown("### ✅ Transaction Verified")
 
-# Function to extract credit card information using OCR
-def ocr_credit_card(image_path):
-    # Load the image
-    image = Image.open(image_path)
+# Initialize the EasyOCR Reader
+reader = easyocr.Reader(['en'])
 
-    # Use pytesseract to do OCR on the image
-    text = pytesseract.image_to_string(image)
+ # Load the image
+    image = Image.open(image_path)
+    image = image.convert('RGB')  # Ensure the image is in RGB format
+
+    # Use EasyOCR to do OCR on the image
+    results = reader.readtext(np.array(image))
+
+    # Initialize variables to store extracted information
+    card_number = "Not found"
+    expiry_date = "Not found"
+    card_holder = "Not found"
+    card_type = "Unknown"
 
     # Regular expressions to find credit card information
     card_number_pattern = r'(\d{4}[-\s]?){3}\d{4}'
     expiry_date_pattern = r'\d{2}/\d{2}'
     card_holder_pattern = r'[A-Z]{2,}(?: [A-Z]{2,})+'
 
-    # Find matches in the OCR-ed text
-    card_number = re.search(card_number_pattern, text)
-    expiry_date = re.search(expiry_date_pattern, text)
-    card_holder = re.search(card_holder_pattern, text)
-
-    # Determine the type of card based on the card number
-    card_type = "Unknown"
-    if card_number:
-        if card_number.group(0).startswith('4'):
-            card_type = "Visa"
-        elif card_number.group(0).startswith('5'):
-            card_type = "MasterCard"
-        elif card_number.group(0).startswith('34') or card_number.group(0).startswith('37'):
-            card_type = "American Express"
-
-    # Extract the information
-    card_number = card_number.group(0) if card_number else "Not found"
-    expiry_date = expiry_date.group(0) if expiry_date else "Not found"
-    card_holder = card_holder.group(0) if card_holder else "Not found"
+    # Process OCR results
+    for (bbox, text, prob) in results:
+        if re.search(card_number_pattern, text):
+            card_number = text
+            if text.startswith('4'):
+                card_type = "Visa"
+            elif text.startswith('5'):
+                card_type = "MasterCard"
+            elif text.startswith('34') or text.startswith('37'):
+                card_type = "American Express"
+        elif re.search(expiry_date_pattern, text):
+            expiry_date = text
+        elif re.search(card_holder_pattern, text):
+            card_holder = text
 
     return card_number, expiry_date, card_holder, card_type
 
