@@ -310,6 +310,8 @@ def analysis_page(model=None):
 # Initialize the EasyOCR Reader
 reader = easyocr.Reader(['en'])
 
+# Function to extract credit card information using OCR with EasyOCR
+def ocr_credit_card(image_path):
  # Load the image
     image = Image.open(image_path)
     image = image.convert('RGB')  # Ensure the image is in RGB format
