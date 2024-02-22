@@ -16,6 +16,8 @@ import openai
 from PIL import Image
 import pytesseract
 from sklearn.ensemble import RandomForestClassifier
+import easyocr
+
 
 # Custom CSS for styling
 def local_css(file_name):
