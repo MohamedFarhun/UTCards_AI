@@ -16,6 +16,7 @@ import openai
 from PIL import Image
 import pytesseract
 from sklearn.ensemble import RandomForestClassifier
+import os
 
 
 tesseract_path = os.getenv('TESSERACT_CMD', 'tesseract')
