@@ -47,6 +47,7 @@ django-clearcache==1.2.1
 django-crispy-forms==1.14.0
 django-mathfilters==1.0.0
 djangorestframework==3.14.0
+easyocr==1.7.1
 enum34==1.1.10
 executing==1.2.0
 extra-streamlit-components==0.1.56
