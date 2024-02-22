@@ -127,22 +127,6 @@ def feature_engineering(df):
     
     return df
 
-def tune_model(X_train, y_train):
-    # Example hyperparameter grid
-    param_grid = {
-        'max_depth': [3, 5, 7],
-        'learning_rate': [0.01, 0.1],
-        'n_estimators': [100, 200],
-        'min_child_weight': [1, 3],
-        'gamma': [0, 0.1]
-    }
-    
-    xgb_model = xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss')
-    grid_search = GridSearchCV(xgb_model, param_grid, cv=3, scoring='accuracy')
-    grid_search.fit(X_train, y_train)
-    
-    return grid_search.best_estimator_
-
 # Analysis Page
 def analysis_page():
     st.title('💱 Transaction Analysis')
@@ -186,8 +170,7 @@ def analysis_page():
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    best_model = tune_model(X_train, y_train)
-    y_pred = best_model.predict(X_test)
+    y_pred = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
 
     # Display model details and accuracy
