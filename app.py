@@ -17,7 +17,9 @@ from PIL import Image
 import pytesseract
 from sklearn.ensemble import RandomForestClassifier
 
-pytesseract.pytesseract.tesseract_cmd = r'tesseract\tesseract.exe'
+
+tesseract_path = os.getenv('TESSERACT_CMD', 'tesseract')
+pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
 # Custom CSS for styling
 def local_css(file_name):
