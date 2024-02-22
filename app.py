@@ -128,7 +128,7 @@ def feature_engineering(df):
     return df
 
 # Analysis Page
-def analysis_page():
+def analysis_page(model=None):
     st.title('💱 Transaction Analysis')
 
     # Load data
