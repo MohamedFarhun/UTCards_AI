@@ -12,7 +12,8 @@ UTCards AI is revolutionizing the financial ecosystem with its Instant Card Issu
 ## Getting Started
 To get started with UTCards AI, clone this repository and follow the setup instructions in the documentation.
 
-git clone https://github.com/MohamedFarhun/UTCards-AI.git
+git clone https://github.com/MohamedFarhun/UTCards_AI.git
+
 cd UTCards-AI
 
 # Follow setup instructions
