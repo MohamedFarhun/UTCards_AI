@@ -74,6 +74,19 @@ def app_ui_enhancements():
     </style>
     """, unsafe_allow_html=True)
 
+# Set page configuration
+st.set_page_config(
+    page_title="UTCards",  # Page title displayed in the browser's title bar
+    page_icon="🎴",         # A relevant emoji or image icon URL
+    layout="wide",         # Use the full screen width
+    initial_sidebar_state="expanded",  # If using a sidebar, set to 'expanded' or 'collapsed'
+    menu_items={
+        'Get Help': 'https://www.linkedin.com/in/mohamed-farhun-m-098b68227/',  # Custom help URL
+        'Report a bug': "https://github.com/MohamedFarhun/UTCards_AI/issues",  # Custom bug report URL
+        'About': "# This is UTCards, your personal card assistant!"  # Custom about text
+    }
+)
+
 def load_data():
     data = pd.read_csv('files/extended_synthetic_credit_card_transactions.csv')
     # Convert TransactionDate to datetime
