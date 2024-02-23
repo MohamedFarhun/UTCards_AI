@@ -18,6 +18,7 @@ import pytesseract
 from sklearn.ensemble import RandomForestClassifier
 import easyocr
 from PIL import Image, ImageEnhance, ImageFilter
+import cv2
 
 
 # Custom CSS for styling
@@ -315,21 +316,19 @@ reader = easyocr.Reader(['en'])
 
 # Function to extract credit card information using OCR with EasyOCR
 def ocr_credit_card(image_path):
- # Load the image
-    image = Image.open(image_path)
-
-    # Convert the image to RGB if it's not already in that mode
-    if image.mode != 'RGB':
-        image = image.convert('RGB')
-
+    # Load the image using OpenCV
+    image = cv2.imread(image_path)
     
-    # Enhance the image for better OCR results
-    enhancer = ImageEnhance.Contrast(image)
-    image_enhanced = enhancer.enhance(2)  # Increase contrast
-    image_sharp = image_enhanced.filter(ImageFilter.SHARPEN)  # Sharpen the image
+    # Convert the image to grayscale
+    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     
-    # Use EasyOCR to do OCR on the enhanced image
-    results = reader.readtext(np.array(image_sharp), detail=0)  # `detail=0` returns only the text
+    # Apply adaptive thresholding to get a binary image
+    thresh_image = cv2.adaptiveThreshold(
+        gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
+    )
+    
+    # Use EasyOCR to do OCR on the thresholded image
+    results = reader.readtext(thresh_image, detail=0)  # `detail=0` returns only the text
 
     # Initialize variables to store extracted information
     card_number = "Not found"
