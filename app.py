@@ -325,7 +325,7 @@ def analysis_page():
         if is_fraudulent:
             # If anomaly score indicates potential fraud
             st.markdown("### ⚠️ Potential Fraud Detected")
-            st.markdown("Action may be required. Please review the transaction carefully.")
+            st.markdown("### Action may be required. Please review the transaction carefully.")
         else:
             st.markdown("### ✅ Transaction Verified")
 
