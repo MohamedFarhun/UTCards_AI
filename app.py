@@ -312,7 +312,7 @@ def analysis_page(model=None):
         explanation = response.choices[0].text.strip()
 
         # Display the response in a styled box
-        response_color = "#ff4b4b" if is_fraudulent else "#e61009"  # Red for fraud, green for no fraud
+        response_color = "#ff4b4b" if is_fraudulent else "#54bf22"  # Red for fraud, green for no fraud
         st.markdown(f"<div style='padding: 10px; border-radius: 10px; border: 2px solid {response_color}; color: {response_color}; margin-bottom: 10px;'>{explanation}</div>", unsafe_allow_html=True)
 
         # Optionally, display the anomaly score for additional context
