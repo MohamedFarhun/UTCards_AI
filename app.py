@@ -304,7 +304,7 @@ def analysis_page(model=None):
         openai.api_key = st.secrets["API_KEY"]
 
         # Check if the anomaly score exceeds the threshold
-        is_fraudulent = anomaly_score >= fraud_threshold
+        is_fraudulent = anomaly_score > fraud_threshold
 
         # Generate prompt with anomaly score
         prompt = generate_fraud_prompt(card_number, amount, current_hour, anomaly_score)
@@ -319,13 +319,11 @@ def analysis_page(model=None):
         st.write(f"Anomaly Score: {anomaly_score:.2f}")
 
         # Optionally, you can provide more context or action items based on the fraud status
-        if is_fraudulent:
+        if is_fraudulent or anomaly_score == fraud_threshold:
              # If anomaly score indicates potential fraud
             st.markdown("### ⚠️ Potential Fraud Detected")
-            st.markdown(f"Anomaly Score: {anomaly_score:.2f}")
             st.markdown("Action may be required. Please review the transaction carefully.")
         else:
-            st.markdown(f"Anomaly Score: {anomaly_score:.2f}")
             st.markdown("### ✅ Transaction Verified")
 
 # Initialize the EasyOCR Reader
