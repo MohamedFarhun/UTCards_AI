@@ -312,7 +312,7 @@ def analysis_page(model=None):
         explanation = response.choices[0].text.strip()
 
         # Display the response in a styled box
-        response_color = "#ff4b4b" if is_fraudulent else "#4bb543"  # Red for fraud, green for no fraud
+        response_color = "#ff4b4b" if is_fraudulent else "#e61009"  # Red for fraud, green for no fraud
         st.markdown(f"<div style='padding: 10px; border-radius: 10px; border: 2px solid {response_color}; color: {response_color}; margin-bottom: 10px;'>{explanation}</div>", unsafe_allow_html=True)
 
         # Optionally, display the anomaly score for additional context
@@ -320,8 +320,12 @@ def analysis_page(model=None):
 
         # Optionally, you can provide more context or action items based on the fraud status
         if is_fraudulent:
-            st.markdown("### ⚠️ Action Required")
+             # If anomaly score indicates potential fraud
+            st.markdown("### ⚠️ Potential Fraud Detected")
+            st.markdown(f"Anomaly Score: {anomaly_score:.2f}")
+            st.markdown("Action may be required. Please review the transaction carefully.")
         else:
+            st.markdown(f"Anomaly Score: {anomaly_score:.2f}")
             st.markdown("### ✅ Transaction Verified")
 
 # Initialize the EasyOCR Reader
