@@ -150,7 +150,7 @@ def train_model(X_train, y_train):
     return model
 
 # Analysis Page
-def analysis_page(model=None):
+def analysis_page():
     st.title('💱 Transaction Analysis')
 
     # Load data
@@ -225,13 +225,13 @@ def analysis_page(model=None):
     features_scaled = scaler.fit_transform(features)
 
     # Anomaly Detection Model
-    model = IsolationForest(n_estimators=100, contamination=0.01, random_state=42)  # contamination is an estimate of the % of anomalies
-    model.fit(features_scaled)
-    data['anomaly'] = model.predict(features_scaled)
+    model2 = IsolationForest(n_estimators=100, contamination=0.01, random_state=42)  # contamination is an estimate of the % of anomalies
+    model2.fit(features_scaled)
+    data['anomaly'] = model2.predict(features_scaled)
     data['anomaly'] = data['anomaly'].map({1: 0, -1: 1})  # Convert to 0 for normal, 1 for anomaly
 
     # Assuming 'model' is your fitted IsolationForest model
-    anomaly_scores = model.decision_function(features_scaled)
+    anomaly_scores = model2.decision_function(features_scaled)
 
     # Normalize scores to a positive scale for visualization
     data['anomaly_score'] = (anomaly_scores - anomaly_scores.min()) / (anomaly_scores.max() - anomaly_scores.min())
@@ -296,8 +296,8 @@ def analysis_page(model=None):
         input_data_scaled = scaler.transform(input_data[['Amount', 'Hour', 'CardNumber', 'ExpirationYear', 'ExpirationMonth']])
 
         # Predict fraud and get anomaly score
-        is_fraudulent = model.predict(input_data_scaled)[0]  # Adjust based on your model
-        anomaly_score = model.decision_function(input_data_scaled)[0]  # Get the anomaly score for the transaction
+        is_fraudulent = model2.predict(input_data_scaled)[0]  # Adjust based on your model
+        anomaly_score = model2.decision_function(input_data_scaled)[0]  # Get the anomaly score for the transaction
 
         # Set the fraud threshold
         fraud_threshold = 0.11
