@@ -304,7 +304,7 @@ def analysis_page(model=None):
         openai.api_key = st.secrets["API_KEY"]
 
         # Check if the anomaly score exceeds the threshold
-        is_fraudulent = anomaly_score > fraud_threshold
+        is_fraudulent = anomaly_score >= fraud_threshold
 
         # Generate prompt with anomaly score
         prompt = generate_fraud_prompt(card_number, amount, current_hour, anomaly_score)
