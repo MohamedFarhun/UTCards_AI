@@ -308,7 +308,7 @@ def analysis_page(model=None):
 
         # Generate prompt with anomaly score
         prompt = generate_fraud_prompt(card_number, amount, current_hour, anomaly_score)
-        response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=prompt, max_tokens=100)
+        response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=prompt, max_tokens=500)
         explanation = response.choices[0].text.strip()
 
         # Display the response in a styled box
