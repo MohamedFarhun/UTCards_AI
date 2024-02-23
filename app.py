@@ -309,20 +309,22 @@ def analysis_page(model=None):
         response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=prompt, max_tokens=500)
         explanation = response.choices[0].text.strip()
 
-        # Display the response in a styled box
-        response_color = "#ff4b4b" if is_fraudulent else "#54bf22"  # Red for fraud, green for no fraud
-        st.markdown(f"<div style='padding: 10px; border-radius: 10px; border: 2px solid {response_color}; color: {response_color}; margin-bottom: 10px;'>{explanation}</div>", unsafe_allow_html=True)
-
         # Optionally, display the anomaly score for additional context
         st.write(f"Anomaly Score: {anomaly_score:.2f}")
 
-    # Optionally, you can provide more context or action items based on the fraud status
-    if is_fraudulent:
-        # If anomaly score indicates potential fraud
-        st.markdown("### ⚠️ Potential Fraud Detected")
-        st.markdown("Action may be required. Please review the transaction carefully.")
-    else:
-        st.markdown("### ✅ Transaction Verified")
+        # Optionally, you can provide more context or action items based on the fraud status
+        if is_fraudulent:
+            # If anomaly score indicates potential fraud
+            st.markdown("### ⚠️ Potential Fraud Detected")
+            st.markdown("Action may be required. Please review the transaction carefully.")
+            # Set the color to red
+            response_color = "#ff4b4b"
+        else:
+            st.markdown("### ✅ Transaction Verified")
+             # Set the color to green
+            response_color = "#54bf22"
+        # Display the styled box with the appropriate color
+        st.markdown(f"<div style='padding: 10px; border-radius: 10px; border: 2px solid {response_color}; color: {response_color}; margin-bottom: 10px;'>{explanation}</div>", unsafe_allow_html=True)
 
 # Initialize the EasyOCR Reader
 reader = easyocr.Reader(['en'])
