@@ -17,6 +17,7 @@ from PIL import Image
 import pytesseract
 from sklearn.ensemble import RandomForestClassifier
 import easyocr
+from PIL import Image, ImageEnhance, ImageFilter
 
 
 # Custom CSS for styling
@@ -316,10 +317,19 @@ reader = easyocr.Reader(['en'])
 def ocr_credit_card(image_path):
  # Load the image
     image = Image.open(image_path)
-    image = image.convert('RGB')  # Ensure the image is in RGB format
 
-    # Use EasyOCR to do OCR on the image
-    results = reader.readtext(np.array(image))
+    # Convert the image to RGB if it's not already in that mode
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+
+    
+    # Enhance the image for better OCR results
+    enhancer = ImageEnhance.Contrast(image)
+    image_enhanced = enhancer.enhance(2)  # Increase contrast
+    image_sharp = image_enhanced.filter(ImageFilter.SHARPEN)  # Sharpen the image
+    
+    # Use EasyOCR to do OCR on the enhanced image
+    results = reader.readtext(np.array(image_sharp), detail=0)  # `detail=0` returns only the text
 
     # Initialize variables to store extracted information
     card_number = "Not found"
@@ -333,9 +343,9 @@ def ocr_credit_card(image_path):
     card_holder_pattern = r'[A-Z]{2,}(?: [A-Z]{2,})+'
 
     # Process OCR results
-    for (bbox, text, prob) in results:
+    for text in results:
         if re.search(card_number_pattern, text):
-            card_number = text
+            card_number = text.replace(" ", "")  # Remove spaces for a clean number
             if text.startswith('4'):
                 card_type = "Visa"
             elif text.startswith('5'):
