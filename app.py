@@ -314,22 +314,24 @@ def analysis_page(model=None):
 # Initialize the EasyOCR Reader
 reader = easyocr.Reader(['en'])
 
-# Function to extract credit card information using OCR with EasyOCR
-def ocr_credit_card(image_path):
-    # Load the image using OpenCV
-    image = cv2.imread(image_path)
-    
-    # Convert the image to grayscale
-    gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    
-    # Apply adaptive thresholding to get a binary image
-    thresh_image = cv2.adaptiveThreshold(
-        gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-    )
-    
-    # Use EasyOCR to do OCR on the thresholded image
-    results = reader.readtext(thresh_image, detail=0)  # `detail=0` returns only the text
+def preprocess_image_for_ocr(image_path):
+    image = Image.open(image_path)
+    # Convert to grayscale
+    image = image.convert('L')
+    # Enhance contrast and sharpness
+    enhancer = ImageEnhance.Contrast(image)
+    image = enhancer.enhance(2)
+    sharpener = ImageEnhance.Sharpness(image)
+    image = sharpener.enhance(2)
+    return np.array(image)
 
+def ocr_credit_card(image_path):
+    # Function to extract credit card information using OCR with EasyOCR
+    image = preprocess_image_for_ocr(image_path)
+    
+    # Adjust reader.readtext parameters to improve OCR results
+    results = reader.readtext(image, contrast_ths=0.05, adjust_contrast=0.7, add_margin=0.1, width_ths=0.7, decoder='beamsearch')
+    
     # Initialize variables to store extracted information
     card_number = "Not found"
     expiry_date = "Not found"
@@ -340,11 +342,11 @@ def ocr_credit_card(image_path):
     card_number_pattern = r'(\d{4}[-\s]?){3}\d{4}'
     expiry_date_pattern = r'\d{2}/\d{2}'
     card_holder_pattern = r'[A-Z]{2,}(?: [A-Z]{2,})+'
-
+    
     # Process OCR results
-    for text in results:
+    for (bbox, text, prob) in results:
         if re.search(card_number_pattern, text):
-            card_number = text.replace(" ", "")  # Remove spaces for a clean number
+            card_number = text
             if text.startswith('4'):
                 card_type = "Visa"
             elif text.startswith('5'):
