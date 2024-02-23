@@ -199,7 +199,7 @@ def analysis_page(model=None):
     # Display model details and accuracy
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("<div class='model-detail-box' style='border-color: #ff4b4b;'><h4 style='color: #ff4b4b;'>Model Used</h4><h3 style='color:#ccc90e'>XGBoost Classifier</h3></div>", unsafe_allow_html=True)
+        st.markdown("<div class='model-detail-box' style='border-color: #ff4b4b;'><h4 style='color: #ff4b4b;'>Model Used</h4><h3 style='color:#ccc90e'>Random Forest Classifier</h3></div>", unsafe_allow_html=True)
     with col2:
         st.markdown(f"<div class='model-detail-box' style='border-color: #ff4b4b;'><h4 style='color: #ff4b4b;'>Accuracy</h4><h3 style='color:#ccc90e'>{accuracy:.2%}</h3></div>", unsafe_allow_html=True)
     
