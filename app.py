@@ -278,8 +278,6 @@ def analysis_page(model=None):
     cvv_valid = re.match(r"^\d{3,4}$", cvv) is not None
     if not cvv_valid and cvv:
         st.error("Enter a valid CVV (3-4 digits).")
-    
-    fraud_threshold = 0.11  # Example threshold, adjust based on your analysis
 
     if submit_button and card_number_valid and cvv_valid:
         # For simplicity, assuming the current hour represents the transaction hour
@@ -304,7 +302,7 @@ def analysis_page(model=None):
         openai.api_key = st.secrets["API_KEY"]
 
         # Check if the anomaly score exceeds the threshold
-        is_fraudulent = anomaly_score > fraud_threshold
+        is_fraudulent = anomaly_score >= 0.11
 
         # Generate prompt with anomaly score
         prompt = generate_fraud_prompt(card_number, amount, current_hour, anomaly_score)
@@ -319,7 +317,7 @@ def analysis_page(model=None):
         st.write(f"Anomaly Score: {anomaly_score:.2f}")
 
         # Optionally, you can provide more context or action items based on the fraud status
-        if is_fraudulent or anomaly_score == fraud_threshold:
+        if is_fraudulent:
              # If anomaly score indicates potential fraud
             st.markdown("### ⚠️ Potential Fraud Detected")
             st.markdown("Action may be required. Please review the transaction carefully.")
