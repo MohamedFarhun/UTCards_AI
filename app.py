@@ -316,13 +316,13 @@ def analysis_page(model=None):
         # Optionally, display the anomaly score for additional context
         st.write(f"Anomaly Score: {anomaly_score:.2f}")
 
-        # Optionally, you can provide more context or action items based on the fraud status
-        if is_fraudulent:
-             # If anomaly score indicates potential fraud
-            st.markdown("### ⚠️ Potential Fraud Detected")
-            st.markdown("Action may be required. Please review the transaction carefully.")
-        else:
-            st.markdown("### ✅ Transaction Verified")
+    # Optionally, you can provide more context or action items based on the fraud status
+    if is_fraudulent:
+        # If anomaly score indicates potential fraud
+        st.markdown("### ⚠️ Potential Fraud Detected")
+        st.markdown("Action may be required. Please review the transaction carefully.")
+    else:
+        st.markdown("### ✅ Transaction Verified")
 
 # Initialize the EasyOCR Reader
 reader = easyocr.Reader(['en'])
