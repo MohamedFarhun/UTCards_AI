@@ -299,15 +299,24 @@ def analysis_page(model=None):
         is_fraudulent = model.predict(input_data_scaled)[0]  # Adjust based on your model
         anomaly_score = model.decision_function(input_data_scaled)[0]  # Get the anomaly score for the transaction
 
+        # Set the fraud threshold
+        fraud_threshold = 0.11
+
         openai.api_key = st.secrets["API_KEY"]
 
         # Check if the anomaly score exceeds the threshold
-        is_fraudulent = anomaly_score >= 0.11
+        is_fraudulent = anomaly_score >= fraud_threshold
 
         # Generate prompt with anomaly score
         prompt = generate_fraud_prompt(card_number, amount, current_hour, anomaly_score)
         response = openai.Completion.create(engine="gpt-3.5-turbo-instruct", prompt=prompt, max_tokens=500)
         explanation = response.choices[0].text.strip()
+
+        # Determine the response color based on fraud status
+        response_color = "#ff4b4b" if is_fraudulent else "#54bf22"
+
+        # Display the response in a styled box
+        st.markdown(f"<div style='padding: 10px; border-radius: 10px; border: 2px solid {response_color}; color: {response_color}; margin-bottom: 10px;'>{explanation}</div>", unsafe_allow_html=True)
 
         # Optionally, display the anomaly score for additional context
         st.write(f"Anomaly Score: {anomaly_score:.2f}")
@@ -317,14 +326,8 @@ def analysis_page(model=None):
             # If anomaly score indicates potential fraud
             st.markdown("### ⚠️ Potential Fraud Detected")
             st.markdown("Action may be required. Please review the transaction carefully.")
-            # Set the color to red
-            response_color = "#ff4b4b"
         else:
             st.markdown("### ✅ Transaction Verified")
-             # Set the color to green
-            response_color = "#54bf22"
-        # Display the styled box with the appropriate color
-        st.markdown(f"<div style='padding: 10px; border-radius: 10px; border: 2px solid {response_color}; color: {response_color}; margin-bottom: 10px;'>{explanation}</div>", unsafe_allow_html=True)
 
 # Initialize the EasyOCR Reader
 reader = easyocr.Reader(['en'])
